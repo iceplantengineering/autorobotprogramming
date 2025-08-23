@@ -1,0 +1,284 @@
+{
+  "work_templates": {
+    "automotive_handling": {
+      "name": "Automotive Parts Handling",
+      "category": "automotive",
+      "description": "Template for automotive parts handling operations",
+      "application_type": "handling",
+      "default_operation": "basic_pick_place",
+      "workpiece_data": {
+        "part_type": "automotive_component",
+        "weight": 2.5,
+        "dimensions": [150, 100, 50],
+        "material": "steel",
+        "grip_points": [
+          {
+            "position": [75, 0, 25, 0, 0, 0],
+            "grip_force": 45.0,
+            "description": "Center grip point"
+          }
+        ]
+      },
+      "station_layout": {
+        "pick_stations": [
+          {
+            "name": "supply_conveyor",
+            "position": [0, -300, 100, 0, 0, 0],
+            "type": "conveyor",
+            "description": "Supply conveyor belt"
+          }
+        ],
+        "place_stations": [
+          {
+            "name": "assembly_fixture",
+            "position": [300, 0, 50, 0, 0, 0], 
+            "type": "fixture",
+            "description": "Assembly fixture position"
+          }
+        ],
+        "intermediate_positions": [
+          {
+            "name": "quality_check",
+            "position": [150, -150, 150, 0, 0, 0],
+            "description": "Quality inspection position"
+          }
+        ]
+      },
+      "cycle_parameters": {
+        "cycle_time_target": 15.0,
+        "approach_speed": 80,
+        "work_speed": 25,
+        "safety_height": 60.0,
+        "grip_force": 45.0
+      },
+      "quality_checks": [
+        {
+          "type": "vision_inspection",
+          "position": "quality_check",
+          "parameters": {
+            "inspection_time": 2.0,
+            "pass_criteria": "dimensional_check"
+          }
+        }
+      ]
+    },
+    "electronics_assembly": {
+      "name": "Electronics Assembly",
+      "category": "electronics", 
+      "description": "Template for small electronics component assembly",
+      "application_type": "handling",
+      "default_operation": "multi_point_handling",
+      "workpiece_data": {
+        "part_type": "pcb_component",
+        "weight": 0.1,
+        "dimensions": [20, 15, 5],
+        "material": "plastic",
+        "grip_points": [
+          {
+            "position": [10, 7.5, 2.5, 0, 0, 0],
+            "grip_force": 5.0,
+            "description": "Gentle center grip"
+          }
+        ]
+      },
+      "station_layout": {
+        "pick_stations": [
+          {
+            "name": "component_tray_1",
+            "position": [-100, -200, 80, 0, 0, 0],
+            "type": "tray",
+            "grid_layout": {
+              "rows": 5,
+              "columns": 4,
+              "spacing": [25, 20]
+            }
+          },
+          {
+            "name": "component_tray_2", 
+            "position": [-100, -100, 80, 0, 0, 0],
+            "type": "tray",
+            "grid_layout": {
+              "rows": 5,
+              "columns": 4,
+              "spacing": [25, 20]
+            }
+          }
+        ],
+        "place_stations": [
+          {
+            "name": "pcb_assembly_1",
+            "position": [200, 0, 50, 0, 0, 0],
+            "type": "pcb_fixture",
+            "description": "PCB assembly position 1"
+          },
+          {
+            "name": "pcb_assembly_2",
+            "position": [200, 100, 50, 0, 0, 0],
+            "type": "pcb_fixture", 
+            "description": "PCB assembly position 2"
+          }
+        ]
+      },
+      "cycle_parameters": {
+        "cycle_time_target": 8.0,
+        "approach_speed": 60,
+        "work_speed": 15,
+        "safety_height": 30.0,
+        "grip_force": 5.0,
+        "precision_mode": true
+      }
+    },
+    "spot_welding_automotive": {
+      "name": "Automotive Spot Welding",
+      "category": "automotive",
+      "description": "Template for automotive body spot welding",
+      "application_type": "spot_welding",
+      "default_operation": "multi_spot_welding",
+      "workpiece_data": {
+        "part_type": "body_panel",
+        "material": "steel",
+        "thickness": 1.5,
+        "weld_joint_type": "overlap"
+      },
+      "welding_parameters": {
+        "default_weld_time": 0.8,
+        "default_pressure": 120.0,
+        "default_current": 6000.0,
+        "default_electrode_force": 250.0,
+        "electrode_type": "class_2_copper"
+      },
+      "weld_pattern": {
+        "pattern_type": "grid",
+        "spacing": 50.0,
+        "rows": 3,
+        "columns": 4,
+        "start_position": [0, 0, 0, 0, 0, 0]
+      },
+      "quality_parameters": {
+        "nugget_diameter_min": 4.0,
+        "nugget_diameter_max": 7.0,
+        "penetration_min": 20,
+        "penetration_max": 80,
+        "expulsion_limit": "none"
+      },
+      "cycle_parameters": {
+        "cycle_time_target": 45.0,
+        "approach_speed": 70,
+        "weld_approach_speed": 20,
+        "retract_speed": 50,
+        "inter_weld_delay": 0.3
+      }
+    },
+    "general_handling": {
+      "name": "General Purpose Handling",
+      "category": "general",
+      "description": "General purpose handling template",
+      "application_type": "handling",
+      "default_operation": "basic_pick_place",
+      "workpiece_data": {
+        "part_type": "generic",
+        "weight": 1.0,
+        "dimensions": [100, 100, 50],
+        "material": "unknown"
+      },
+      "station_layout": {
+        "pick_stations": [
+          {
+            "name": "input_position",
+            "position": [0, -200, 100, 0, 0, 0],
+            "type": "fixed_position"
+          }
+        ],
+        "place_stations": [
+          {
+            "name": "output_position", 
+            "position": [200, 0, 100, 0, 0, 0],
+            "type": "fixed_position"
+          }
+        ]
+      },
+      "cycle_parameters": {
+        "cycle_time_target": 20.0,
+        "approach_speed": 75,
+        "work_speed": 30,
+        "safety_height": 50.0,
+        "grip_force": 50.0
+      }
+    }
+  },
+  "station_types": {
+    "conveyor": {
+      "description": "Moving conveyor belt",
+      "parameters": {
+        "speed": "float",
+        "direction": "string",
+        "tracking_enable": "bool"
+      },
+      "required_signals": ["CONVEYOR_READY", "PART_DETECT"]
+    },
+    "fixture": {
+      "description": "Fixed workpiece fixture",
+      "parameters": {
+        "clamp_force": "float",
+        "clamp_time": "float"
+      },
+      "required_signals": ["FIXTURE_READY", "PART_CLAMPED"]
+    },
+    "tray": {
+      "description": "Component tray with grid layout",
+      "parameters": {
+        "grid_layout": "object",
+        "part_count": "int"
+      },
+      "required_signals": ["TRAY_PRESENT"]
+    },
+    "pcb_fixture": {
+      "description": "PCB assembly fixture",
+      "parameters": {
+        "pcb_size": "array",
+        "component_positions": "array"
+      },
+      "required_signals": ["PCB_PRESENT", "FIXTURE_VACUUM_ON"]
+    },
+    "fixed_position": {
+      "description": "Simple fixed position",
+      "parameters": {},
+      "required_signals": []
+    }
+  },
+  "material_properties": {
+    "steel": {
+      "density": 7.85,
+      "recommended_grip_force_per_kg": 20.0,
+      "surface_finish": "rough",
+      "magnetic": true
+    },
+    "aluminum": {
+      "density": 2.70,
+      "recommended_grip_force_per_kg": 25.0,
+      "surface_finish": "smooth", 
+      "magnetic": false
+    },
+    "plastic": {
+      "density": 1.20,
+      "recommended_grip_force_per_kg": 10.0,
+      "surface_finish": "smooth",
+      "magnetic": false,
+      "fragile": true
+    }
+  },
+  "validation_schemas": {
+    "workpiece_data": {
+      "required_fields": ["part_type", "weight", "dimensions"],
+      "optional_fields": ["material", "grip_points", "special_handling"]
+    },
+    "station_layout": {
+      "required_fields": ["pick_stations", "place_stations"],
+      "optional_fields": ["intermediate_positions", "quality_check_stations"]
+    },
+    "cycle_parameters": {
+      "required_fields": ["cycle_time_target", "approach_speed", "work_speed"],
+      "optional_fields": ["safety_height", "grip_force", "precision_mode"]
+    }
+  }
+}

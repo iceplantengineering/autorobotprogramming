@@ -1,0 +1,371 @@
+{
+  "handling_operations": {
+    "basic_pick_place": {
+      "name": "Basic Pick and Place",
+      "description": "Standard pick from source, place to destination operation",
+      "application_type": "handling",
+      "parameters": {
+        "pick_position": {
+          "type": "position",
+          "required": true,
+          "description": "Position to pick up workpiece",
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "place_position": {
+          "type": "position", 
+          "required": true,
+          "description": "Position to place workpiece",
+          "default": [100.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "grip_force": {
+          "type": "float",
+          "required": false,
+          "default": 50.0,
+          "min": 1.0,
+          "max": 100.0,
+          "description": "Grip force in Newtons"
+        },
+        "approach_speed": {
+          "type": "int",
+          "required": false,
+          "default": 80,
+          "min": 1,
+          "max": 100,
+          "description": "Approach movement speed percentage"
+        },
+        "work_speed": {
+          "type": "int",
+          "required": false,
+          "default": 30,
+          "min": 1,
+          "max": 100,
+          "description": "Work movement speed percentage"
+        }
+      },
+      "safety_checks": [
+        "PART_PRESENT",
+        "JIG_CLAMPED", 
+        "DOOR_CLOSED",
+        "AIR_PRESSURE_OK"
+      ],
+      "trajectory_template": "basic_handling_trajectory"
+    },
+    "conveyor_pick_place": {
+      "name": "Conveyor Pick and Place",
+      "description": "Pick from moving conveyor, place to fixed position",
+      "application_type": "handling",
+      "parameters": {
+        "conveyor_pick_position": {
+          "type": "position",
+          "required": true,
+          "description": "Position to pick from conveyor",
+          "default": [0.0, -200.0, 50.0, 0.0, 0.0, 0.0]
+        },
+        "place_position": {
+          "type": "position",
+          "required": true, 
+          "description": "Fixed place position",
+          "default": [200.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "conveyor_speed": {
+          "type": "float",
+          "required": false,
+          "default": 50.0,
+          "min": 1.0,
+          "max": 200.0,
+          "description": "Conveyor belt speed mm/s"
+        },
+        "tracking_enable": {
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "description": "Enable conveyor tracking"
+        },
+        "grip_force": {
+          "type": "float",
+          "required": false,
+          "default": 60.0,
+          "min": 1.0,
+          "max": 100.0,
+          "description": "Grip force in Newtons"
+        }
+      },
+      "safety_checks": [
+        "PART_PRESENT",
+        "CONVEYOR_READY",
+        "DOOR_CLOSED",
+        "AIR_PRESSURE_OK",
+        "DISCHARGE_READY"
+      ],
+      "trajectory_template": "conveyor_handling_trajectory"
+    },
+    "multi_point_handling": {
+      "name": "Multi-Point Handling",
+      "description": "Pick from multiple source points, place to multiple destinations",
+      "application_type": "handling",
+      "parameters": {
+        "pick_points": {
+          "type": "position_array",
+          "required": true,
+          "description": "Array of pick positions",
+          "default": [
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          ]
+        },
+        "place_points": {
+          "type": "position_array",
+          "required": true,
+          "description": "Array of place positions", 
+          "default": [
+            [200.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [250.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          ]
+        },
+        "grip_forces": {
+          "type": "float_array",
+          "required": false,
+          "description": "Grip forces for each point",
+          "default": [50.0, 50.0]
+        },
+        "cycle_mode": {
+          "type": "string",
+          "required": false,
+          "default": "sequential",
+          "options": ["sequential", "parallel", "optimized"],
+          "description": "Handling cycle mode"
+        }
+      },
+      "safety_checks": [
+        "PART_PRESENT",
+        "JIG_CLAMPED",
+        "DOOR_CLOSED", 
+        "AIR_PRESSURE_OK",
+        "SUPPLY_PART_OK",
+        "DISCHARGE_READY"
+      ],
+      "trajectory_template": "multi_point_handling_trajectory"
+    }
+  },
+  "welding_operations": {
+    "spot_welding_single": {
+      "name": "Single Spot Welding",
+      "description": "Single spot welding operation",
+      "application_type": "spot_welding",
+      "parameters": {
+        "weld_position": {
+          "type": "position",
+          "required": true,
+          "description": "Welding position",
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "weld_time": {
+          "type": "float",
+          "required": false,
+          "default": 1.0,
+          "min": 0.1,
+          "max": 5.0,
+          "description": "Welding time in seconds"
+        },
+        "pressure": {
+          "type": "float",
+          "required": false,
+          "default": 100.0,
+          "min": 50.0,
+          "max": 200.0,
+          "description": "Welding pressure in kPa"
+        },
+        "current": {
+          "type": "float",
+          "required": false,
+          "default": 5000.0,
+          "min": 1000.0,
+          "max": 8000.0,
+          "description": "Welding current in Amperes"
+        },
+        "electrode_force": {
+          "type": "float",
+          "required": false,
+          "default": 200.0,
+          "min": 100.0,
+          "max": 500.0,
+          "description": "Electrode force in Newtons"
+        }
+      },
+      "safety_checks": [
+        "PART_PRESENT",
+        "JIG_CLAMPED",
+        "DOOR_CLOSED",
+        "AIR_PRESSURE_OK",
+        "WELD_ENABLE",
+        "WELDER_READY"
+      ],
+      "trajectory_template": "single_spot_weld_trajectory"
+    },
+    "multi_spot_welding": {
+      "name": "Multi-Spot Welding",
+      "description": "Multiple spot welding sequence",
+      "application_type": "spot_welding",
+      "parameters": {
+        "weld_points": {
+          "type": "weld_point_array",
+          "required": true,
+          "description": "Array of welding points with parameters",
+          "default": [
+            {
+              "position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+              "weld_time": 1.0,
+              "pressure": 100.0,
+              "current": 5000.0,
+              "electrode_force": 200.0
+            }
+          ]
+        },
+        "sequence_mode": {
+          "type": "string",
+          "required": false,
+          "default": "linear",
+          "options": ["linear", "optimized", "reverse"],
+          "description": "Welding sequence mode"
+        },
+        "inter_weld_delay": {
+          "type": "float",
+          "required": false,
+          "default": 0.5,
+          "min": 0.0,
+          "max": 5.0,
+          "description": "Delay between welds in seconds"
+        }
+      },
+      "safety_checks": [
+        "PART_PRESENT",
+        "JIG_CLAMPED",
+        "DOOR_CLOSED",
+        "AIR_PRESSURE_OK",
+        "WELD_ENABLE",
+        "WELDER_READY"
+      ],
+      "trajectory_template": "multi_spot_weld_trajectory"
+    }
+  },
+  "trajectory_templates": {
+    "basic_handling_trajectory": {
+      "description": "Basic pick and place trajectory generation",
+      "steps": [
+        {
+          "type": "move",
+          "target": "pick_approach",
+          "speed": "approach_speed",
+          "description": "Move to pick approach position"
+        },
+        {
+          "type": "tool_control",
+          "command": "open",
+          "description": "Open gripper"
+        },
+        {
+          "type": "move", 
+          "target": "pick_position",
+          "speed": "work_speed",
+          "description": "Move to pick position"
+        },
+        {
+          "type": "tool_control",
+          "command": "close",
+          "parameters": {"grip_force": "grip_force"},
+          "description": "Close gripper and pick workpiece"
+        },
+        {
+          "type": "move",
+          "target": "pick_approach",
+          "speed": "work_speed",
+          "description": "Lift workpiece"
+        },
+        {
+          "type": "move",
+          "target": "place_approach", 
+          "speed": "approach_speed",
+          "description": "Move to place approach"
+        },
+        {
+          "type": "move",
+          "target": "place_position",
+          "speed": "work_speed",
+          "description": "Move to place position"
+        },
+        {
+          "type": "tool_control",
+          "command": "open",
+          "description": "Open gripper and release workpiece"
+        },
+        {
+          "type": "move",
+          "target": "place_approach",
+          "speed": "work_speed",
+          "description": "Retract from place position"
+        }
+      ]
+    },
+    "single_spot_weld_trajectory": {
+      "description": "Single spot welding trajectory generation",
+      "steps": [
+        {
+          "type": "move",
+          "target": "weld_approach",
+          "speed": 50,
+          "description": "Move to weld approach position"
+        },
+        {
+          "type": "move",
+          "target": "weld_position",
+          "speed": 10,
+          "description": "Move to weld position"
+        },
+        {
+          "type": "weld",
+          "parameters": {
+            "weld_time": "weld_time",
+            "pressure": "pressure",
+            "current": "current", 
+            "electrode_force": "electrode_force"
+          },
+          "description": "Execute welding"
+        },
+        {
+          "type": "move",
+          "target": "weld_approach",
+          "speed": 30,
+          "description": "Retract from weld position"
+        }
+      ]
+    }
+  },
+  "validation_rules": {
+    "position": {
+      "type": "array",
+      "length": 6,
+      "element_type": "float",
+      "description": "Position must be [x, y, z, rx, ry, rz]"
+    },
+    "position_array": {
+      "type": "array",
+      "element_type": "position",
+      "min_length": 1,
+      "max_length": 20,
+      "description": "Array of positions"
+    },
+    "weld_point_array": {
+      "type": "array",
+      "element_type": "object",
+      "required_fields": ["position", "weld_time", "pressure", "current", "electrode_force"],
+      "min_length": 1,
+      "max_length": 50,
+      "description": "Array of welding points with parameters"
+    },
+    "float_array": {
+      "type": "array",
+      "element_type": "float",
+      "description": "Array of float values"
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "application": {
+    "name": "Robot Teaching Application",
+    "version": "1.0.0",
+    "description": "Industrial robot teaching and automation system",
+    "author": "Robot Automation Team"
+  },
+  "communication": {
+    "tcp_server": {
+      "host": "localhost",
+      "port": 8888,
+      "timeout": 30,
+      "max_connections": 10,
+      "buffer_size": 4096
+    },
+    "retry_policy": {
+      "max_retries": 5,
+      "base_delay": 1.0,
+      "max_delay": 30.0,
+      "exponential_backoff": true,
+      "jitter": true
+    },
+    "error_recovery": {
+      "circuit_breaker_threshold": 5,
+      "recovery_timeout": 60,
+      "health_check_interval": 30
+    }
+  },
+  "robot": {
+    "default_settings": {
+      "tcp_offset": [0.0, 0.0, 100.0, 0.0, 0.0, 0.0],
+      "move_speed": 100,
+      "approach_speed": 50,
+      "work_speed": 30,
+      "safety_height": 50.0,
+      "coordinate_system": "world"
+    },
+    "limits": {
+      "max_speed": 100,
+      "min_speed": 1,
+      "max_acceleration": 100,
+      "workspace_limits": {
+        "x_min": -1000.0,
+        "x_max": 1000.0,
+        "y_min": -1000.0,
+        "y_max": 1000.0,
+        "z_min": 0.0,
+        "z_max": 1000.0
+      }
+    }
+  },
+  "tools": {
+    "welding_gun": {
+      "tcp_offset": [0.0, 0.0, 150.0, 0.0, 0.0, 0.0],
+      "default_settings": {
+        "weld_time": 1.0,
+        "pressure": 100.0,
+        "current": 5000.0,
+        "electrode_force": 200.0
+      },
+      "limits": {
+        "max_weld_time": 5.0,
+        "min_weld_time": 0.1,
+        "max_pressure": 200.0,
+        "max_current": 8000.0,
+        "max_electrode_force": 500.0
+      }
+    },
+    "gripper": {
+      "tcp_offset": [0.0, 0.0, 100.0, 0.0, 0.0, 0.0],
+      "default_settings": {
+        "grip_force": 50.0,
+        "grip_speed": 50.0,
+        "max_grip_force": 100.0,
+        "grip_range": [0.0, 80.0]
+      },
+      "limits": {
+        "max_grip_force": 150.0,
+        "min_grip_force": 1.0,
+        "max_grip_speed": 100.0,
+        "min_grip_speed": 1.0
+      }
+    }
+  },
+  "safety": {
+    "emergency_stop": {
+      "enable": true,
+      "stop_time": 0.1,
+      "restart_required": true
+    },
+    "workspace_monitoring": {
+      "enable": true,
+      "check_interval": 0.1,
+      "collision_detection": true
+    },
+    "door_interlock": {
+      "enable": true,
+      "required_signals": ["DOOR_CLOSED", "AIR_PRESSURE_OK"]
+    }
+  },
+  "io": {
+    "monitoring": {
+      "enable": true,
+      "interval": 0.1,
+      "history_length": 100
+    },
+    "signal_mapping": {
+      "inputs": {
+        "START_BUTTON": "I0.0",
+        "E_STOP": "I0.1",
+        "PAUSE_BUTTON": "I0.2",
+        "RESUME_BUTTON": "I0.3",
+        "MODE_SELECT": "I0.4",
+        "PART_PRESENT": "I0.5",
+        "JIG_CLAMPED": "I0.6",
+        "DOOR_CLOSED": "I0.7",
+        "AIR_PRESSURE_OK": "I1.0",
+        "WELD_ENABLE": "I1.1",
+        "WELDER_READY": "I1.2",
+        "SUPPLY_PART_OK": "I1.3",
+        "DISCHARGE_READY": "I1.4"
+      },
+      "outputs": {
+        "WORK_COMPLETE": "Q0.0",
+        "ERROR_OCCURRED": "Q0.1",
+        "READY_LAMP": "Q0.2",
+        "WORKING_LAMP": "Q0.3",
+        "STEP_NUMBER": "Q0.4",
+        "ERROR_CODE": "Q0.5",
+        "WELD_EXECUTE": "Q0.6",
+        "WELD_COMPLETE": "Q0.7",
+        "PICK_COMPLETE": "Q1.0",
+        "PLACE_COMPLETE": "Q1.1"
+      }
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file_logging": {
+      "enable": true,
+      "filename": "logs/robot_app.log",
+      "max_size": "10MB",
+      "backup_count": 5
+    }
+  }
+}
