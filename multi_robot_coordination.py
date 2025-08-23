@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from basic_handling_workflow import Position, WorkPiece
 from integrated_safety_system import safety_system
 from trajectory_generation import TrajectoryPoint, AdvancedTrajectoryGenerator
-from tcp_communication import TCPCommunicationManager
+from tcp_communication import TCPClient
 from config_manager import config_manager
 
 logger = logging.getLogger(__name__)
@@ -291,7 +291,7 @@ class MultiRobotCoordinator:
         self.collision_predictor = CollisionPredictor()
         
         # 通信管理
-        self.communication_managers: Dict[str, TCPCommunicationManager] = {}
+        self.communication_managers: Dict[str, TCPClient] = {}
         
         # 制御状態
         self.coordination_state = CoordinationState.STANDALONE
@@ -412,7 +412,7 @@ class MultiRobotCoordinator:
             # 通信初期化
             if robot_info.communication_endpoint:
                 host, port = robot_info.communication_endpoint.split(":")
-                comm_manager = TCPCommunicationManager(host, int(port))
+                comm_manager = TCPClient(host, int(port))
                 self.communication_managers[robot_info.robot_id] = comm_manager
             
             logger.info(f"Robot added: {robot_info.robot_id}")
@@ -526,7 +526,7 @@ class MultiRobotCoordinator:
             if robot_info.communication_endpoint:
                 try:
                     host, port = robot_info.communication_endpoint.split(":")
-                    comm_manager = TCPCommunicationManager(host, int(port))
+                    comm_manager = TCPClient(host, int(port))
                     self.communication_managers[robot_id] = comm_manager
                     logger.info(f"Communication initialized for robot {robot_id}")
                 except Exception as e:
