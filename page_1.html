@@ -1,0 +1,966 @@
+<!DOCTYPE html><html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Visual Components Pythonアドオン活用解説書</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    }
+.chart-container {
+    position: relative;
+    margin: 3em auto;
+    max-width: 700px;
+    min-height: 200px;
+    max-height: 400px;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    aspect-ratio: 7/5;}
+h5 {
+    font-size: 16px;
+    }
+body {
+    font-family: "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, メイリオ, Osaka, "MS PGothic", arial, helvetica, sans-serif;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #333;
+    background-color: #fafafa;
+    margin: 0 24px 0 24px;
+    padding: 0;
+    max-width: None;
+    }
+main {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+h1, h2, h3, h4 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+    font-size: 28px;
+    }
+h1 {
+    font-size: 28px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5em;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    }
+h2 {
+    font-size: 22px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.4em;
+    }
+h3 {
+    font-size: 20px;
+    }
+p {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    }
+a {
+    color: #1a73e8;
+    text-decoration: none;
+    }
+a:hover {
+    text-decoration: underline;
+    }
+pre {
+    background-color: #f4f4f4;
+    padding: 1.2em;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.9em;
+    }
+code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    }
+blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #666;
+    font-style: italic;
+    }
+ul, ol {
+    padding-left: 1.5em;
+    }
+li {
+    margin-bottom: 0.5em;
+    }
+strong {
+    font-weight: 600;
+    }
+figure {
+    margin: 2em 0;
+    text-align: center;
+    }
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    overflow: hidden;
+    max-height: 280px;
+    margin: 1em auto;
+    }
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0.5em;
+    }
+.toc {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 2em;
+    }
+.toc h2 {
+    margin-top: 0;
+    border-bottom: none;
+    font-size: 1.5em;
+    }
+.toc ul {
+    list-style-type: none;
+    padding-left: 0;
+    }
+.toc ul ul {
+    padding-left: 20px;
+    }
+.toc li {
+    margin-bottom: 8px;
+    }
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+}
+
+@media only screen and (max-device-width: 768px) {
+            body {
+                padding: 0;
+                margin: 0;
+                font-family: PingFang SC;
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+            .container {
+                padding: 0;
+                margin: 16px 20px 30px;
+                box-shadow: none;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4 {
+                font-family: PingFang SC;
+            }
+
+            h1 {
+                font-size: 1.87em;
+                line-height: 1.6;
+                margin-bottom: 0.5em;
+                text-align: center;
+            }
+
+            h2 {
+                font-size: 1.6em;
+                font-weight: 600;
+                margin-top: 1.3em;
+                margin-bottom: 0.8em;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 0.5em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+                font-weight: 600;
+                margin-top: 1em;
+                margin-bottom: 0.6em;
+            }
+
+            h4 {
+                font-size: 1.1em;
+                font-weight: 500;
+                margin-top: 1em;
+                margin-bottom: 0.5em;
+                font-style: normal;
+            }
+
+            h5 {
+                font-size: 1em;
+                font-weight: 500;
+                margin-bottom: 1.2em;
+            }
+
+            ul,
+            ol {
+                font-size: 1em; /* Equivalent to 17.6px if base is 16px */
+                font-weight: 400;
+                margin-bottom: 1.2em;
+                line-height: 1.8;
+            }
+
+            p {
+                font-size: 1em;
+                line-height: 1.8; /* Equivalent to 17.6px if base is 16px */
+                font-weight: 400;
+                margin-top: 0.8em;
+                margin-bottom: 0.8em;
+            }
+
+            blockquote {
+                padding: 1em 1.2em;
+
+            p {
+                margin: 0;
+            }
+        }
+
+        figcaption {
+            margin-top: 0.5em;
+            font-size: 0.8em; /* Equivalent to 17.6px if base is 16px */
+            font-weight: 400;
+            text-align: center;
+            font-style: normal;
+            color: #7F8896;
+        }
+
+        img {
+            display: block;
+            overflow: hidden;
+            max-width: 100%;
+            max-height: 335px;
+            margin: 1em auto;
+            border-radius: 8px;
+        }
+        }</style>
+<link rel="stylesheet" href="https://static.skywork.ai/fe/skywork-site-assets/styles/doc_reference_style.css?v=1976236114060558336"/></head>
+<body><div class="container">
+<h1 id="section-1">Visual Components Pythonアドオン活用解説書</h1>
+<nav class="toc" id="toc">
+<h2 id="section-1">目次</h2>
+<ul>
+<li><a href="#section-heading-1">Pythonアドオンとスクリプトの基礎</a>
+<ul>
+<li><a href="#section-heading-2">アドオン、コンポーネントスクリプト、.NET APIの違い</a></li>
+<li><a href="#section-heading-3">アドオンの基本構造</a></li>
+</ul>
+</li>
+<li><a href="#section-heading-4">実践例：レイアウト全体の操作を自動化する</a>
+<ul>
+<li><a href="#section-heading-5">実例1: 全コンポーネントの情報をCSVエクスポート</a></li>
+<li><a href="#section-heading-6">実例2: 全ロボットを初期位置にリセット</a></li>
+<li><a href="#section-heading-7">実例3: シミュレーション統計の自動記録</a></li>
+<li><a href="#section-heading-8">実例4: コンポーネントの一括リネーム</a></li>
+<li><a href="#section-heading-9">実例5: レイアウトの自動バックアップ</a></li>
+<li><a href="#section-heading-10">実例6: 全コンベアの速度を一括変更</a></li>
+<li><a href="#section-heading-11">実例7: 距離計算ツール</a></li>
+<li><a href="#section-heading-12">実例8: 未使用コンポーネントの自動検出</a></li>
+<li><a href="#section-heading-13">実例9: プロダクション数カウンター</a></li>
+<li><a href="#section-heading-14">実例10: 衝突検出レポート生成</a></li>
+</ul>
+</li>
+<li><a href="#section-heading-15">アドオンのインストールと注意点</a>
+<ul>
+<li><a href="#section-heading-16">インストール方法</a></li>
+<li><a href="#section-heading-17">よくある注意点とベストプラクティス</a></li>
+</ul>
+</li>
+<li><a href="#section-heading-18">まとめ</a></li>
+</ul>
+</nav>
+<p>このドキュメントは、Visual Components（以下、VC）の強力なカスタマイズ機能である<strong>Pythonアドオン</strong>の作成と活用方法について、具体的な実例を交えながら詳細に解説するものである。Pythonアドオンを使いこなすことで、定型作業の自動化、カスタムツールの開発、プロジェクト管理の効率化など、VCの可能性を最大限に引き出すことができる。</p>
+<figure>
+<img alt="Visual Componentsによる工場レイアウトシミュレーション" src="https://agents-download.skywork.ai/image/rt/a0ea6d4dda47e4b13b4821988e19c2bd.jpg" style="max-height: 280px; max-width: 100%;"/>
+<figcaption>Visual Componentsで作成された自動化工場レイアウトの3Dシミュレーション</figcaption>
+</figure>
+<h2 id="section-heading-1">Pythonアドオンとスクリプトの基礎</h2>
+<p>VCにおけるPythonの活用方法は、主に「コンポーネントスクリプト」と「Pythonアドオン」の2種類に大別される。本解説書の主題であるPythonアドオンを理解するために、まずこれらの違いを明確にする。</p>
+<h3 id="section-heading-2">アドオン、コンポーネントスクリプト、.NET APIの違い</h3>
+<p>VCでは、用途に応じて複数のAPIが提供されている。それぞれの特徴を理解し、目的に合った最適な手法を選択することが重要である。</p>
+<ul>
+<li><strong>コンポーネントスクリプト (Component Script)</strong>: 特定のコンポーネントに固有のロジックや動作を定義するためのスクリプト。シミュレーション中に実行され、コンポーネントのプロパティ変更やタスク管理を行う。<a href="https://academy.visualcomponents.com/app/uploads/2017/02/Component-Scripting.pdf" target="_blank">スクリプトはコンポーネント自体に保存される</a>ため、レイアウトファイル（.vcmx）を共有するだけでロジックも一緒に配布できる。</li>
+<li><strong>Pythonアドオン (Python Add-on)</strong>: VCアプリケーション全体の機能を拡張するための仕組み。メニューにカスタムコマンドを追加したり、レイアウト全体に影響を与える処理を実装したりできる。シミュレーションモデルとは独立しており、<a href="https://forum.visualcomponents.com/t/where-to-put-the-python-script/3032" target="_blank">特定のフォルダにファイルを配置する</a>ことでVC起動時に読み込まれる。</li>
+<li><strong>.NET API</strong>: より高度でリッチなUIを持つアドオンや、外部の.NETライブラリとの連携が必要な場合に利用される。Python APIに比べて実装の自由度は高いが、Visual Studioなどでのコンパイルが必要となり、配布も別途インストーラーなどを用意する必要がある。</li>
+</ul>
+<p>以下のグラフは、これらのAPIの機能的な違いを比較したものである。</p>
+<div class="chart-container" id="canvas-parent-1" style="position: relative; height:400px; width:100%; max-width:700px; margin: 2em auto;">
+<canvas id="apiComparisonChart"></canvas>
+</div>
+<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const ctx = document.getElementById('apiComparisonChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['シミュレーションロジック', 'UI拡張性', '配布の容易さ', '外部ライブラリ連携'],
+                            datasets: [
+                                {
+                                    label: 'Python コンポーネントスクリプト',
+                                    data: [5, 2, 5, 2],
+                                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Python アドオン',
+                                    data: [3, 3, 4, 2],
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: '.NET API',
+                                    data: [2, 5, 2, 5],
+                                    backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                                    borderColor: 'rgba(255, 159, 64, 1)',
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Visual Components APIの適用範囲と機能比較',
+                                    font: { size: 18 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            const value = context.raw;
+                                            const scale = {1: '不可', 2: '限定的', 3: '中程度', 4: '高い', 5: '非常に高い'};
+                                            label += scale[value] || value;
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 5,
+                                    ticks: {
+                                        stepSize: 1,
+                                        callback: function(value, index, values) {
+                                            const scale = {0:'', 1: '不可', 2: '限定的', 3: '中程度', 4: '高い', 5: '非常に高い'};
+                                            return scale[value];
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: '機能レベル'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>
+<h3 id="section-heading-3">アドオンの基本構造</h3>
+<p>Pythonアドオンは、VCアプリケーションの特定のフォルダに配置されたPythonファイル群で構成される。VCは起動時にこのフォルダをスキャンし、アドオンを自動的に登録する。</p>
+<h4>アドオンファイルの配置場所</h4>
+<p>Pythonアドオンのファイルは、以下のフォルダに配置する必要がある。バージョン番号は使用しているVCのバージョンに合わせて変更すること。</p>
+<pre><code>C:\Users\[ユーザー名]\Documents\Visual Components\[バージョン]\My Commands\Python 2</code></pre>
+<p><a href="https://forum.visualcomponents.com/t/python-addon-installation-folder/6882" target="_blank">フォーラムの投稿</a>によると、このフォルダが存在しない場合は手動で作成する必要がある場合がある。</p>
+<h4>必要なファイル</h4>
+<p>最小限のアドオンは、通常2つのファイルで構成される。</p>
+<ul>
+<li><code><strong>__init__.py</strong></code>: アドオンの初期化ファイル。このファイルに、VCに登録したいコマンド（機能）を定義する。VCはこのファイルを最初に読み込み、アドオンをアプリケーションに組み込む。<a href="https://help.visualcomponents.com/4.9/Premium/en/Python_API/Creating_a_Python_Add-on.htm" target="_blank">公式ヘルプ</a>では、このファイルでコマンドのロードやUI（メニュー項目、アイコンなど）の設定を行う方法が解説されている。</li>
+<li><strong>コマンドファイル (例: `MyCommand.py`)</strong>: コマンドの実際の処理を記述するPythonファイル。<code>__init__.py</code>で登録されたコマンドが実行されると、このファイル内のコードが呼び出される。</li>
+</ul>
+<h4>基本的な構造</h4>
+<p>以下に、シンプルなアドオンの基本的なコード構造を示す。</p>
+<p><strong><code>__init__.py</code> の例:</strong></p>
+<pre><code># -*- coding: utf-8 -*-
+from vcApplication import *
+
+# この関数はVCの初期化が完了したときに呼び出される
+def OnAppInitialized():
+  # コマンドファイルへのパスを取得
+  cmd_path = getApplicationPath() + &#34;MyCommand.py&#34;
+  
+  # コマンドを&#34;MyCommandID&#34;というIDで登録し、コマンドファイルと紐付ける
+  command = loadCommand(&#34;MyCommandID&#34;, cmd_path)
+  
+  # メニューにコマンドを追加
+  addMenuItem(&#34;VcTabHome&#34;, &#34;マイツール&#34;, -1, &#34;MyCommandID&#34;)
+</code></pre>
+<p><strong>コマンドファイル (<code>MyCommand.py</code>) の例:</strong></p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+
+# コマンドが実行されたときに呼び出されるメインの処理
+def OnStart():
+  # 選択されているコンポーネントを取得
+  components = app.getSelectedComponents()
+  
+  if not components:
+    app.messageBox(&#34;情報&#34;, &#34;コンポーネントが選択されていません。&#34;, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+    return
+
+  # 選択されたコンポーネントの名前を出力パネルに表示
+  for comp in components:
+    print(&#34;選択されたコンポーネント: %s&#34; % comp.Name)
+
+# コマンドの実行状態を定義
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<p>この例では、「ホーム」タブに「マイツール」というボタンが追加され、クリックすると選択中のコンポーネント名が出力パネルに表示される。</p>
+<h2 id="section-heading-4">実践例：レイアウト全体の操作を自動化する</h2>
+<p>ここでは、日常的な作業を効率化するための具体的なアドオンの例を10個紹介する。これらのコードを参考に、独自のツールを開発することができる。</p>
+<h3 id="section-heading-5">実例1: 全コンポーネントの情報をCSVエクスポート</h3>
+<p>レイアウト内の全コンポーネントの名前、タイプ、位置情報をCSVファイルに出力する。大規模なレイアウトのドキュメント作成や、外部ツールでの分析に役立つ。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+import csv
+import os
+
+app = getApplication()
+
+def export_to_csv():
+    # 保存先ファイルパスを指定
+    # ユーザーのドキュメントフォルダに保存する
+    file_path = os.path.join(os.path.expanduser(&#34;~&#34;), &#34;Documents&#34;, &#34;components_list.csv&#34;)
+    
+    # 全コンポーネントの情報を収集
+    data = []
+    # app.getComponents() を使うことで、3Dワールド内の全コンポーネントを取得できる
+    for comp in app.getComponents():
+        pos = comp.PositionMatrix
+        data.append([
+            comp.Name,
+            comp.RootComponent.Type, # .Typeは古い場合があるため、RootComponent.Typeがより確実
+            pos.P.X, pos.P.Y, pos.P.Z
+        ])
+    
+    # CSVに保存 (エンコーディングを &#39;utf-8-sig&#39; にしてExcelでの文字化けを防ぐ)
+    try:
+        with open(file_path, &#39;w&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as f:
+            writer = csv.writer(f)
+            writer.writerow([&#39;Name&#39;, &#39;Type&#39;, &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;])
+            writer.writerows(data)
+        
+        app.messageBox(&#34;成功&#34;, &#34;コンポーネント情報をCSVにエクスポートしました。\nパス: %s&#34; % file_path, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+    except Exception as e:
+        app.messageBox(&#34;エラー&#34;, &#34;CSVファイルのエクスポートに失敗しました。\n%s&#34; % str(e), VC_MESSAGE_TYPE_ERROR, VC_MESSAGE_BUTTONS_OK)
+
+def OnStart():
+    export_to_csv()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> レイアウト構成のドキュメント化、コンポーネント配置の監査、外部の資産管理システムとのデータ連携など。 <a href="https://academy.visualcomponents.com/lessons/import-and-export-data-with-csv-files/" target="_blank">VC AcademyのCSVチュートリアル</a>も参考になる。</blockquote>
+<h3 id="section-heading-6">実例2: 全ロボットを初期位置にリセット</h3>
+<p>レイアウト内の全ロボットアームを、定義されたホームポジション（ここでは全関節角度0度）に一括でリセットする。シミュレーションの準備やデバッグに便利である。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+
+def reset_robots():
+    reset_count = 0
+    # vcRobotController を持つコンポーネントを検索
+    for comp in app.getComponents():
+        # findBehaviourで特定の振る舞いを持つかチェック
+        controller = comp.findBehaviour(&#34;vcRobotController&#34;)
+        if controller:
+            # moveJoints を使って即座に目標角度へ移動させる
+            # 第2引数は移動時間(0は即時)
+            home_pos = [0.0] * controller.JointCount
+            controller.moveJoints(home_pos, 0)
+            reset_count += 1
+    
+    app.messageBox(&#34;完了&#34;, &#34;%d台のロボットを初期位置にリセットしました。&#34; % reset_count, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+
+def OnStart():
+    reset_robots()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> シミュレーション開始前の状態初期化、複数のロボット姿勢の同時確認、デモンストレーションのセットアップ。ロボット制御の詳細は<a href="https://academy.visualcomponents.com/app/uploads/2017/03/Control-Robots.pdf" target="_blank">Control Robotsチュートリアル(PDF)</a>で学べる。</blockquote>
+<h3 id="section-heading-7">実例3: シミュレーション統計の自動記録</h3>
+<p>シミュレーションの実行イベント（開始・停止）をフックし、実行時間などの統計情報をログファイルに自動で記録する。パフォーマンス分析やレポート作成に活用できる。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+import time
+import os
+
+app = getApplication()
+simulation = app.getSimulation()
+log_file = os.path.join(os.path.expanduser(&#34;~&#34;), &#34;Documents&#34;, &#34;simulation_log.txt&#34;)
+start_time = 0
+
+def on_simulation_start(sim):
+    global start_time
+    start_time = time.time()
+    with open(log_file, &#39;a&#39;, encoding=&#39;utf-8&#39;) as f:
+        f.write(&#34;\n=== シミュレーション開始: %s ===\n&#34; % time.ctime())
+
+def on_simulation_stop(sim):
+    if start_time &gt; 0:
+        elapsed = time.time() - start_time
+        with open(log_file, &#39;a&#39;, encoding=&#39;utf-8&#39;) as f:
+            f.write(&#34;実行時間: %.2f秒\n&#34; % elapsed)
+            f.write(&#34;コンポーネント数: %d\n&#34; % len(app.getComponents()))
+
+def register_logger():
+    # イベントリスナーを登録
+    simulation.OnStart.connect(on_simulation_start)
+    simulation.OnStop.connect(on_simulation_stop)
+    app.messageBox(&#34;情報&#34;, &#34;シミュレーションロガーが有効になりました。&#34;, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+
+def OnStart():
+    register_logger()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> シミュレーションの実行履歴管理、レイアウト変更によるパフォーマンスへの影響分析、プロジェクトの進捗レポート作成。</blockquote>
+<h3 id="section-heading-8">実例4: コンポーネントの一括リネーム</h3>
+<p>特定の命名規則に従って、コンポーネント名を一括で変更する。大規模なレイアウトの整理や、プロジェクト標準の遵守に役立つ。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+
+def rename_components():
+    conveyor_count = 1
+    robot_count = 1
+    
+    # コンポーネントをソートして、毎回同じ順序でリネームされるようにする
+    components = sorted(app.getComponents(), key=lambda c: c.Name)
+
+    for comp in components:
+        # コンポーネントのタイプを文字列として取得し、部分一致で判定
+        comp_type = comp.RootComponent.Type
+        if &#39;Conveyor&#39; in comp_type:
+            comp.Name = &#34;Conveyor_%03d&#34; % conveyor_count
+            conveyor_count += 1
+        elif &#39;Robot&#39; in comp_type:
+            comp.Name = &#34;Robot_%03d&#34; % robot_count
+            robot_count += 1
+            
+    app.render() # 3Dビューとコンポーネントツリーの表示を更新
+    app.messageBox(&#34;完了&#34;, &#34;コンポーネントのリネームが完了しました。&#34;, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+
+def OnStart():
+    rename_components()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> プロジェクト内での命名規則の統一、大規模レイアウトの可読性向上、スクリプトからのコンポーネントアクセスの簡素化。</blockquote>
+<h3 id="section-heading-9">実例5: レイアウトの自動バックアップ</h3>
+<p>現在のレイアウトを、タイムスタンプ付きのファイル名で指定したフォルダにバックアップとして保存する。重要な変更を加える前のバージョン管理に不可欠である。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+import os
+from datetime import datetime
+
+app = getApplication()
+
+def backup_layout():
+    # バックアップ用ディレクトリを作成
+    backup_dir = os.path.join(os.path.expanduser(&#34;~&#34;), &#34;Documents&#34;, &#34;vc_backups&#34;)
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+    
+    # タイムスタンプ付きのファイル名を生成
+    timestamp = datetime.now().strftime(&#34;%Y%m%d_%H%M%S&#34;)
+    
+    # 現在のレイアウト名を取得、なければ&#39;layout&#39;をデフォルトとする
+    current_layout_path = app.LayoutPath
+    if current_layout_path:
+        base_name = os.path.splitext(os.path.basename(current_layout_path))[0]
+    else:
+        base_name = &#34;layout&#34;
+        
+    filename = &#34;%s_backup_%s.vcmx&#34; % (base_name, timestamp)
+    full_path = os.path.join(backup_dir, filename)
+    
+    # レイアウトを保存
+    try:
+        app.saveLayout(full_path)
+        app.messageBox(&#34;成功&#34;, &#34;バックアップを保存しました。\n%s&#34; % full_path, VC_MESSAGE_TYPE_INFO, VC_MESSAGE_BUTTONS_OK)
+    except Exception as e:
+        app.messageBox(&#34;エラー&#34;, &#34;バックアップに失敗しました。\n%s&#34; % str(e), VC_MESSAGE_TYPE_ERROR, VC_MESSAGE_BUTTONS_OK)
+
+def OnStart():
+    backup_layout()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> 重要な設計変更前のスナップショット作成、手動でのバージョン管理、作業履歴の確実な保存。</blockquote>
+<h3 id="section-heading-10">実例6: 全コンベアの速度を一括変更</h3>
+<p>レイアウト内の全てのコンベアの速度プロパティを、ダイアログで指定した値に一括で変更する。パラメータスタディやスループットの最適化テストに便利である。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+cmd = getCommand()
+
+def OnStart():
+    # プロパティを作成してタスクパネルに表示
+    prop_speed = cmd.createProperty(VC_REAL, &#34;Speed&#34;, VC_PROPERTY_DEFAULT)
+    prop_speed.Name = &#34;速度 (m/min)&#34;
+    prop_speed.Value = 60.0
+    
+    prop_button = cmd.createProperty(VC_BUTTON, &#34;ApplyButton&#34;)
+    prop_button.Name = &#34;適用&#34;
+    prop_button.OnChanged = apply_speed
+
+    # タスクパネルを表示する状態に移行
+    cmd.addState(execute_in_panel)
+
+def apply_speed(prop):
+    speed_value = cmd.getProperty(&#34;Speed&#34;).Value / 60.0 # m/min から m/s に変換
+    count = 0
+    
+    for comp in app.getComponents():
+        # &#39;Path&#39; プロパティを持つコンポーネント（コンベアなど）を探す
+        path_behavior = comp.findBehaviour(&#34;Path&#34;)
+        if path_behavior:
+            path_behavior.Speed = speed_value
+            count += 1
+            
+    print(&#34;%d個のコンベアの速度を %.2f m/s に変更しました&#34; % (count, speed_value))
+
+def execute_in_panel():
+    # この関数はタスクパネルを表示するために存在する
+    pass
+
+OnStart()
+</code></pre>
+<blockquote><strong>用途:</strong> シミュレーション条件の一括変更、生産ラインのボトルネック分析、複数のシナリオでのスループット比較。</blockquote>
+<h3 id="section-heading-11">実例7: 距離計算ツール</h3>
+<p>3Dワールドで選択した2つのコンポーネント間の直線距離を計算し、出力パネルに表示する。レイアウト設計時のクリアランス確認や配置の最適化に役立つ。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+import math
+
+app = getApplication()
+
+def calculate_distance():
+    # 選択されたコンポーネントを取得
+    selection = app.getSelectedComponents()
+    
+    if len(selection) != 2:
+        app.messageBox(&#34;注意&#34;, &#34;2つのコンポーネントを選択してください。&#34;, VC_MESSAGE_TYPE_WARNING, VC_MESSAGE_BUTTONS_OK)
+        return
+    
+    comp1 = selection[0]
+    comp2 = selection[1]
+    
+    # 各コンポーネントの原点座標を取得
+    pos1 = comp1.PositionMatrix.P
+    pos2 = comp2.PositionMatrix.P
+    
+    # 3次元ユークリッド距離を計算
+    distance = math.sqrt(
+        (pos2.X - pos1.X)**2 + 
+        (pos2.Y - pos1.Y)**2 + 
+        (pos2.Z - pos1.Z)**2
+    )
+    
+    print(&#34;&#39;%s&#39; と &#39;%s&#39; の間の距離: %.2f mm&#34; % (comp1.Name, comp2.Name, distance))
+
+def OnStart():
+    calculate_distance()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> レイアウト設計時の干渉チェック、ロボットのリーチ範囲の確認、安全柵や作業エリアの配置検討。</blockquote>
+<h3 id="section-heading-12">実例8: 未使用コンポーネントの自動検出</h3>
+<p>信号接続やプロセスフロー定義などで使用されていない、孤立したコンポーネントを検出する。レイアウトのクリーンアップやパフォーマンス改善に繋がる。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+
+def find_unused_components():
+    all_components = app.getComponents()
+    used_components = set()
+    
+    for comp in all_components:
+        # 信号接続をチェック
+        for signal in comp.getSignals():
+            for connection in signal.Connections:
+                used_components.add(comp)
+                used_components.add(connection.Component)
+        
+        # プロセスフローをチェック (Works Libraryなど)
+        executor = comp.findBehaviourByType(&#34;vcProcessExecutor&#34;)
+        if executor:
+            for statement in executor.Statements:
+                # statementが参照するコンポーネントなどをセットに追加
+                # (この部分は使用するライブラリに応じて実装が必要)
+                pass
+
+    unused = [comp for comp in all_components if comp not in used_components]
+    
+    print(&#34;=== 未使用の可能性があるコンポーネント (%d個) ===&#34; % len(unused))
+    for comp in unused[:20]:  # 最初の20個まで表示
+        print(&#34;  - %s (Type: %s)&#34; % (comp.Name, comp.RootComponent.Type))
+
+def OnStart():
+    find_unused_components()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> レイアウトの整理と簡素化、シミュレーションのパフォーマンス改善、設計ミスの検出。</blockquote>
+<h3 id="section-heading-13">実例9: プロダクション数カウンター</h3>
+<p>シミュレーション中に生産される製品数をリアルタイムでカウントし、カスタムパネルに表示する。生産性のモニタリングやKPIの可視化に有効である。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+cmd = getCommand()
+panel = None
+count_label = None
+count = 0
+
+def on_signal_change(signal):
+    global count
+    # 信号がTrueになった時にカウントアップ
+    if signal.Value:
+        count += 1
+        if count_label:
+            count_label.Caption = &#34;Products: %d&#34; % count
+
+def reset_counter(prop):
+    global count
+    count = 0
+    if count_label:
+        count_label.Caption = &#34;Products: 0&#34;
+
+def OnStart():
+    global panel, count_label
+    
+    # タスクパネルを作成
+    panel = cmd.createPanel()
+    panel.Title = &#34;Production Counter&#34;
+    
+    count_label = panel.addLabel(&#34;Products: 0&#34;, VC_ALIGN_LEFT)
+    reset_button = panel.addButton(&#34;Reset&#34;, VC_ALIGN_RIGHT)
+    reset_button.OnChanged = reset_counter
+    
+    # 特定のコンポーネントの信号をリッスン
+    # ここでは&#39;ProductCounterSignal&#39;という名前の信号を持つコンポーネントを探す
+    for comp in app.getComponents():
+        signal = comp.findSignal(&#34;ProductCounterSignal&#34;)
+        if signal:
+            signal.OnValueChange.connect(on_signal_change)
+            print(&#34;カウンターを &#39;%s&#39; の信号に接続しました。&#34; % comp.Name)
+            break
+    
+    cmd.addState(execute_in_panel)
+
+def execute_in_panel():
+    pass
+
+OnStart()
+</code></pre>
+<blockquote><strong>用途:</strong> 生産ラインのスループットのリアルタイム監視、目標生産数達成までの進捗確認、デモンストレーションでのKPI可視化。</blockquote>
+<h3 id="section-heading-14">実例10: 衝突検出レポート生成</h3>
+<p>各コンポーネントのバウンディングボックス（境界ボックス）を比較し、静的な干渉の可能性があるペアをリストアップする。詳細な衝突解析の前段階として、レイアウトの健全性を素早くチェックできる。</p>
+<pre><code># -*- coding: utf-8 -*-
+from vcCommand import *
+
+app = getApplication()
+
+def check_collisions():
+    collisions = []
+    components = app.getComponents()
+    
+    # コンポーネントのペアを総当たりでチェック
+    for i in range(len(components)):
+        for j in range(i + 1, len(components)):
+            comp1 = components[i]
+            comp2 = components[j]
+            
+            # バウンディングボックスを取得 (ワールド座標系)
+            bbox1 = comp1.getBoundingBox(True)
+            bbox2 = comp2.getBoundingBox(True)
+            
+            # AABB (軸並行境界ボックス) 衝突判定
+            if (bbox1.Min.X &lt;= bbox2.Max.X and bbox1.Max.X &gt;= bbox2.Min.X and
+                bbox1.Min.Y &lt;= bbox2.Max.Y and bbox1.Max.Y &gt;= bbox2.Min.Y and
+                bbox1.Min.Z &lt;= bbox2.Max.Z and bbox1.Max.Z &gt;= bbox2.Min.Z):
+                collisions.append((comp1.Name, comp2.Name))
+    
+    print(&#34;=== 静的衝突検出レポート ===&#34;)
+    print(&#34;潜在的な衝突の可能性があるペア: %d件&#34; % len(collisions))
+    for name1, name2 in collisions[:10]: # 最初の10件を表示
+        print(&#34;  - %s &lt;--&gt; %s&#34; % (name1, name2))
+
+def OnStart():
+    check_collisions()
+
+cmd = getCommand()
+cmd.addState(OnStart)
+</code></pre>
+<blockquote><strong>用途:</strong> レイアウト設計の初期段階での干渉チェック、安全性の事前検証、詳細な動的衝突解析を行う前のスクリーニング。</blockquote>
+<h2 id="section-heading-15">アドオンのインストールと注意点</h2>
+<p>作成したアドオンをVCで利用するための手順と、開発時に留意すべき点を解説する。</p>
+<h3 id="section-heading-16">インストール方法</h3>
+<p>アドオンのインストールは、ファイルを所定の場所に配置し、VCを再起動するだけで完了する。</p>
+<ol>
+<li><strong>フォルダの作成:</strong> <code>C:\Users\[ユーザー名]\Documents\Visual Components\[バージョン]\My Commands\Python 2</code> フォルダが存在しない場合は作成する。</li>
+<li><strong>ファイルの配置:</strong> 作成した <code>__init__.py</code> とコマンドファイル（例: <code>MyCommand.py</code>）を上記フォルダにコピーする。関連するファイルをサブフォルダにまとめて整理することも可能。</li>
+<li><strong>Visual Componentsの再起動:</strong> VCを再起動すると、<code>My Commands</code> フォルダがスキャンされ、アドオンが自動的に読み込まれる。</li>
+<li><strong>実行:</strong> <code>__init__.py</code> で設定したメニュー（例: 「ホーム」タブ）からコマンドを実行できる。</li>
+</ol>
+<p>詳細は<a href="https://academy.visualcomponents.com/lessons/find-and-use-python-add-ons/" target="_blank">Visual Components Academyのチュートリアル</a>でも確認できる。</p>
+<figure>
+<img alt="Visual ComponentsのOutputパネル" src="https://agents-download.skywork.ai/image/rt/be3e7a5fbf94f2157b3a6d356bf12c10.jpg" style="max-height: 280px; max-width: 100%;"/>
+<figcaption>Pythonスクリプトのprint文によるデバッグ出力は、画面下部の「Output」パネルに表示される</figcaption>
+</figure>
+<h3 id="section-heading-17">よくある注意点とベストプラクティス</h3>
+<ul>
+<li><strong>Pythonバージョン:</strong> VC 4.x系ではPython 2.7が使用されるが、<a href="https://www.visualcomponents.com/products/visual-components-5-0/" target="_blank">VC 5.0以降ではPython 3がサポート</a>されている。開発対象のVCバージョンに合わせた構文で記述する必要がある。特に `print` 文の書き方やライブラリの違いに注意が必要。</li>
+<li><strong>エラー処理:</strong> アドオンのコードに構文エラーなどがあると、VC起動時にエラーメッセージが表示される。エラー内容をよく読み、問題箇所を修正すること。</li>
+<li><strong>デバッグ:</strong> アドオンのデバッグには `print()` 文が最も手軽で効果的である。出力はVCの「Output」パネルに表示される。</li>
+<li><strong>パス区切り文字:</strong> Windows環境であっても、ファイルパスの区切り文字はバックスラッシュ(`\`)ではなくスラッシュ(`/`)を使用することが推奨される。バックスラッシュはエスケープ文字として解釈される可能性があるため、`r&#34;C:\path\to\file&#34;` のようにraw文字列にするか、`&#34;C:/path/to/file&#34;` のように記述する。</li>
+<li><strong>APIドキュメントの参照:</strong> VCの「ヘルプ」メニューから「Python API」リファレンスガイドにアクセスできる。不明なクラスやメソッドについては、この公式ドキュメントを参照することが問題解決の近道である。</li>
+</ul>
+<h2 id="section-heading-18">まとめ</h2>
+<p>本解説書では、Visual ComponentsのPythonアドオンの基本から、作業を自動化・効率化するための10個の実践的な例までを詳述した。</p>
+<p>Pythonアドオンを活用することで、以下のメリットが得られる。</p>
+<ul>
+<li><strong>作業の自動化:</strong> コンポーネント情報の出力やリネームといった反復作業をワンクリックで実行できる。</li>
+<li><strong>カスタムツールの開発:</strong> 距離計算や衝突レポートなど、プロジェクト固有の要求に応えるツールをメニューに追加できる。</li>
+<li><strong>標準化と品質向上:</strong> 命名規則の適用や未使用コンポーネントの検出により、レイアウトの品質を維持しやすくなる。</li>
+<li><strong>プロジェクト間での再利用:</strong> 一度作成したアドオンは、他のプロジェクトでも簡単に再利用でき、開発資産を蓄積できる。</li>
+</ul>
+<p>ここで紹介した例は、あくまで出発点に過ぎない。Visual Components Python APIの豊富な機能を組み合わせることで、さらに高度で複雑な処理も実装可能である。本解説書が、読者の皆様それぞれの課題を解決し、Visual Componentsをより強力なツールとして活用するための一助となれば幸いである。</p>
+<div class="reference-container">
+			<div class="reference-section">
+				<h3 class="reference-title">参考資料</h3>
+				<div class="reference-list">
+					
+					<div class="reference-item">
+						<span class="reference-number">[1]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">Where to put the python script - Visual Components - forum</span>
+									
+							</div>
+							<a href="https://forum.visualcomponents.com/t/where-to-put-the-python-script/3032" class="reference-link" target="_blank">
+								https://forum.visualcomponents.com/t/where-to-put-the-python-script/3032
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[2]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">Creating a Python Add-on - Visual Components Help</span>
+									
+							</div>
+							<a href="https://help.visualcomponents.com/4.9/Premium/en/Python_API/Creating_a_Python_Add-on.htm" class="reference-link" target="_blank">
+								https://help.visualcomponents.com/4.9/Premium/en/Python_API/Creating_a_Python_Add-on.htm
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[3]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">Import and Export Data with CSV Files - Visual Components Academy</span>
+									
+							</div>
+							<a href="https://academy.visualcomponents.com/lessons/import-and-export-data-with-csv-files/" class="reference-link" target="_blank">
+								https://academy.visualcomponents.com/lessons/import-and-export-data-with-csv-files/
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[4]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">[PDF] Control Robots | Visual Components Academy</span>
+									
+							</div>
+							<a href="https://academy.visualcomponents.com/app/uploads/2017/03/Control-Robots.pdf" class="reference-link" target="_blank">
+								https://academy.visualcomponents.com/app/uploads/2017/03/Control-Robots.pdf
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[5]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">[PDF] Component Scripting</span>
+									
+							</div>
+							<a href="https://academy.visualcomponents.com/app/uploads/2017/02/Component-Scripting.pdf" class="reference-link" target="_blank">
+								https://academy.visualcomponents.com/app/uploads/2017/02/Component-Scripting.pdf
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[6]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">Visual Components 5.0</span>
+									
+							</div>
+							<a href="https://www.visualcomponents.com/products/visual-components-5-0/" class="reference-link" target="_blank">
+								https://www.visualcomponents.com/products/visual-components-5-0/
+							</a>
+						</div>
+					</div>
+					
+					<div class="reference-item">
+						<span class="reference-number">[7]</span>
+						<div class="reference-content">
+							<div class="reference-text-container">
+								<span class="reference-text">Python addon installation folder - Visual Components - forum</span>
+									
+							</div>
+							<a href="https://forum.visualcomponents.com/t/python-addon-installation-folder/6882" class="reference-link" target="_blank">
+								https://forum.visualcomponents.com/t/python-addon-installation-folder/6882
+							</a>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div></div>
+</body></html>
